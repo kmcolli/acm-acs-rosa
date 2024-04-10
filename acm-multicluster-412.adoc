@@ -2,7 +2,7 @@
 
 == Working with ROSA clusters in ACM
 
-Currently, you cannot create and managed the cluster lifecycle of ROSA clusters, however you can import ROSA clusters into ACM.  After a ROSA cluster is imported into ACM you can then use ACM to manage applications and policies for that ROSA cluster like any other cluster.
+Currently, you cannot create and manage the cluster lifecycle of ROSA clusters with ACM, however you can import ROSA clusters into ACM.  After a ROSA cluster is imported into ACM you can then use ACM to manage applications and policies for that ROSA cluster like you can for any other cluster.
 
 Navigate to `Local-cluster` then you should see the new ACM console when you select `All Clusters`.
 
@@ -24,6 +24,8 @@ image::images/acm-images/acm-import-cluster.png[]
 
 image::images/acm-images/acm-import-rosa.png[]
 
+### Screen 2: Automation
+
 [start=2]
 2. Click NEXT
 
@@ -31,12 +33,12 @@ Keep all the defaults, we will manually import the cluster. Click Next.
 
 image::images/acm-images/acm-import-rosa-automation.png[]
 
+### Screen 3: Review
+
 [start=3]
 3. Click Generate Command - you can review the settings here.  This will generate a command that we will next run on our ROSA cluster.
 
 * Click Generate Command
-
-### Screen 4 Pull secret and SSH
 
 Click on Copy Command, that will copy a command to register your cluster with ACM to your clipboard.
 
