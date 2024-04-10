@@ -76,17 +76,15 @@ Next, log into the ROSA cluster.
 
 Set an environment variable for the ROSA API server
 
-[source,bash,role="execute"]
-----
+```bash
 export ROSA_API=`rosa describe cluster --cluster rosa-${GUID} -o json | jq -r '.api.url'`
-----
+```
 
 Log into the ROSA Cluster
 
-[source,bash,role="execute"]
-----
+```bash
 oc login $ROSA_API --username cluster-admin --password $ADMIN_PASSWORD
-----
+```
 
 *Output*
 ```bash
@@ -104,7 +102,9 @@ Welcome! See 'oc help' to get started.
 
 
 *Output*
-```bashcustomresourcedefinition.apiextensions.k8s.io/klusterlets.operator.open-cluster-management.io created
+
+```bash
+customresourcedefinition.apiextensions.k8s.io/klusterlets.operator.open-cluster-management.io created
 namespace/open-cluster-management-agent created
 serviceaccount/klusterlet created
 clusterrole.rbac.authorization.k8s.io/klusterlet created
@@ -115,6 +115,7 @@ deployment.apps/klusterlet created
 secret/bootstrap-hub-kubeconfig created
 klusterlet.operator.open-cluster-management.io/klusterlet created
 ```
+
 image::images/acm-images/acm-import-cluster-command.png[]
 
 
