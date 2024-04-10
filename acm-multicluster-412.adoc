@@ -17,7 +17,7 @@ image::images/acm-images/RHACM_all_cluster.png[]
 
 image::images/acm-images/acm-import-cluster.png[]
 
-##### Screen 1: Basic Info
+##### Screen 1: Details
 
 * Name:  `rosa-cluster`
 * Cluster Set: `default`
@@ -56,10 +56,9 @@ Verify the admin password is set in your terminal.
 Run the following command and ensure that the applications are up and running
 |===
 
-[source,bash,role="execute"]
-----
+```bash
 echo $ADMIN_PASSWORD
-----
+```
 
 *Output*
 ```bash
