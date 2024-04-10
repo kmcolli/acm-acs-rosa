@@ -17,14 +17,14 @@ image::images/acm-images/RHACM_all_cluster.png[]
 
 image::images/acm-images/acm-import-cluster.png[]
 
-### Screen 1: Basic Info
+##### Screen 1: Basic Info
 
 * Name:  `rosa-cluster`
 * Cluster Set: `default`
 
 image::images/acm-images/acm-import-rosa.png[]
 
-### Screen 2: Automation
+##### Screen 2: Automation
 
 [start=2]
 2. Click NEXT
@@ -33,7 +33,7 @@ Keep all the defaults, we will manually import the cluster. Click Next.
 
 image::images/acm-images/acm-import-rosa-automation.png[]
 
-### Screen 3: Review
+##### Screen 3: Review
 
 [start=3]
 3. Click Generate Command - you can review the settings here.  This will generate a command that we will next run on our ROSA cluster.
