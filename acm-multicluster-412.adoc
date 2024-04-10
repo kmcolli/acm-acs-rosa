@@ -1,87 +1,128 @@
 = Advanced Cluster Management for Kubernetes - RHACM
 
-== Working with Clusters and Cluster Lifecycle
+== Working with ROSA clusters in ACM
 
-At a high level Cluster Lifecycle management is about creating, upgrading, and destroying and importing clusters in a multi cloud environment.
+Currently, you cannot create and managed the cluster lifecycle of ROSA clusters, however you can import ROSA clusters into ACM.  After a ROSA cluster is imported into ACM you can then use ACM to manage applications and policies for that ROSA cluster like any other cluster.
 
-In the demo console you will find that ACM from 4.7 onwards is now intergrated with the OpenShift Cosnole. 
-
-Please find your console located below: 
-
-{{ MASTER_URL }}
-
-If you navigate to `Local-cluster` then you should see the new ACM console when you select `All Clusters`.
+Navigate to `Local-cluster` then you should see the new ACM console when you select `All Clusters`.
 
 Once there you can proceed with the module.
 
 image::images/acm-images/RHACM_all_cluster.png[]
 
-
-
-
-
+== Importing a ROSA cluster into ACM
 
 [start=1]
-1. Once you have logged in to ACM, Navigate to *Credentials menu* and then select *Add Credentials*
+1. Once you have logged in to ACM, click on Import Cluster
 
-
-image::images/acm-images/credentials.png[]
-
-image::images/acm-images/add_cred.png[]
-
-=== You will need to provide connection details:
-
-* Cloud Provider Credentials: Choose *Amazon Web Services* +
-
-image::images/acm-images/aws_cred.png[]
+image::images/acm-images/acm-import-cluster.png[]
 
 ### Screen 1: Basic Info
 
-* Credential Name:  `aws`
-* Namespace: `open-cluster-management`
-* Base DNS Domain:  This information is located on the demo console under the field *rhacm_aws_subdomain*. You can also find it on the creds page for this workshop under *Top level domain*.
+* Name:  `rosa-cluster`
+* Cluster Set: `default`
 
-When copy and pasting this information, make sure you omit the dot on the url, for example it should read `sandbox1536.opentlc.com` not `.sandbox1536.opentlc.com`
-
-image::images/acm-images/cred_basicinfo.png[]
+image::images/acm-images/acm-import-rosa.png[]
 
 [start=2]
 2. Click NEXT
 
-### Screen 2 Amazon Web Services
+Keep all the defaults, we will manually import the cluster. Click Next.
 
-* Access Key ID: This information is located on the creds page for the 
-demo console under the field *AWS_ACCESS_KEY_ID*
-
-* Secret Access Key ID: This information is located on the creds page 
-for the demo console under the field *AWS_SECRET_ACCESS_KEY*
-
-image::images/acm-images/screen2.png[]
+image::images/acm-images/acm-import-rosa-automation.png[]
 
 [start=3]
-3. Click NEXT - We don't need to configure a Proxy so we can skip this screen
+3. Click Generate Command - you can review the settings here.  This will generate a command that we will next run on our ROSA cluster.
 
-* Click NEXT
-
-
+* Click Generate Command
 
 ### Screen 4 Pull secret and SSH
 
-* Red Hat OpenShift pull secret:  https://cloud.redhat.com/openshift/install/pull-secret[Get the pull secret from cloud.redhat.com - RH login Required]
+Click on Copy Command, that will copy a command to register your cluster with ACM to your clipboard.
 
-image::images/acm-images/pull_secret.png[]
+image::images/acm-images/acm-import-rosa-copy-command.png[]
 
-* SSH private and public keys:  Use an existing key pair or https://docs.openshift.com/container-platform/4.9/installing/installing_aws/installing-aws-default.html#ssh-agent-using_installing-aws-default[generate a new ssh key]
-
-> Please note you might need *console.redhat.com* access to get these keys
 
 [start=4]
-4. Click NEXT
+4. Next, log into your ROSA cluster.  Navigate to your ROSA Workshop environment and the beginning Environment Setup section, and ssh into the bastion.
 
-image::images/acm-images/screen4.png[]
+image::images/acm-images/acm-rosa-setup-environment.png[]
 
-[start=5]
-5. Verify the information and click *ADD*
+When you first went through the ROSA lab, you created a cluster-admin user and saved the password to an environment variable named ADMIN_PASSWORD.
+
+Verify the admin password is set in your terminal.
+Run the following command and ensure that the applications are up and running
+|===
+
+[source,bash,role="execute"]
+----
+echo $ADMIN_PASSWORD
+----
+
+*Output*
+```bash
+CIvGW-5waw3-taJLz-Lyhw6
+```
+==== Echo admin password
+
+You wil have a different value, but it should have returned something.
+
+If you don't have this environment variable set, go back through the Create Admin User section of the ROSA demo.
+
+image::images/acm-images/acm-rosa-create-admin.png[]
+
+Next, log into the ROSA cluster.
+
+Set an environment variable for the ROSA API server
+
+[source,bash,role="execute"]
+----
+export ROSA_API=`rosa describe cluster --cluster rosa-${GUID} -o json | jq -r '.api.url'`
+----
+
+Log into the ROSA Cluster
+
+[source,bash,role="execute"]
+----
+oc login $ROSA_API --username cluster-admin --password $ADMIN_PASSWORD
+----
+
+*Output*
+```bash
+Login successful.
+
+You have access to 99 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "default".
+Welcome! See 'oc help' to get started.
+```
+==== oc login 
+
+[start=6]
+6. After being logged into your rosa cluster, you can now paste in the command you copied from ACM ( step 3)
+
+
+*Output*
+```bashcustomresourcedefinition.apiextensions.k8s.io/klusterlets.operator.open-cluster-management.io created
+namespace/open-cluster-management-agent created
+serviceaccount/klusterlet created
+clusterrole.rbac.authorization.k8s.io/klusterlet created
+clusterrole.rbac.authorization.k8s.io/klusterlet-bootstrap-kubeconfig created
+clusterrole.rbac.authorization.k8s.io/open-cluster-management:klusterlet-admin-aggregate-clusterrole created
+clusterrolebinding.rbac.authorization.k8s.io/klusterlet created
+deployment.apps/klusterlet created
+secret/bootstrap-hub-kubeconfig created
+klusterlet.operator.open-cluster-management.io/klusterlet created
+```
+image::images/acm-images/acm-import-cluster-command.png[]
+
+
+[start=7]
+7. Navigate back to your ACM console and ensure the ROSA cluster has been successfully imported.
+
+image::images/acm-images/acm-show-rosa.png[]
+
+*Congratulations!* You have successfully imported a ROSA cluster into ACM.
 
 == Create a new OpenShift cluster in AWS
 
