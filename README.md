@@ -22,8 +22,6 @@ The ROSA workshop can be used as a standalone workshop, follow the instructions 
 
 The instructions below supercede the formal instructions in the workshop guide.  Feel free to go through the formal instructions if you would like, but the following instructions will incorporate the ROSA workshop cluster.
 
-#### Log into the Modern App Dev Roadshow - Ops Track cluster
-
 
 #### Advanced Cluster Security
 
@@ -32,6 +30,7 @@ For the first two modules, we will be using the workshop interface.  To launch t
 ![ROSA Workshop](images/main/launch-mad-acs-credentials.png)
 
 DO NOT go through the instructions you see on the left nav, rather go through the following two links.
+
 [Vulnerability Scanning with ACS](acs-vulnerability-412.adoc)
 
 [DevSecOps with ACS](acs-devsecops-412.adoc)
@@ -43,6 +42,8 @@ For the ACM module, we will be using the OpenShift console directly rather than 
 After you sign into the workshop, you will be presented a page like this.   Click on the OpenShift Console link and log in with the kubeadmin credentials listed.
 
 ![ROSA Workshop](images/main/launch-mad-credentials.png)
+
+After you log into OpenShift, follow these instructions.
 
 [Multicluster Management with ACM](acm-multicluster-412.adoc)
 
