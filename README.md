@@ -3,6 +3,9 @@
 The following content is adopted from the Red Hat Modern Application Development ( MAD ) Workshop - OPs track to work in conjunction with the ROSA Workshop.
 
 ## Prerequisites:
+
+These instructions require two different workshop environments.  
+
 1. [MOBB ROSA Workshop](https://demo.redhat.com/catalog?item=babylon-catalog-prod/sandboxes-gpte.rosa-wksp-predeploy.prod&utm_source=webapp&utm_medium=share-link)
 
 2. [Modern App Dev Roadshow - Ops Track](https://demo.redhat.com/catalog?item=babylon-catalog-prod/sandboxes-gpte.ocp4-acm-acs-ops-wksp.prod&utm_source=webapp&utm_medium=share-link)
