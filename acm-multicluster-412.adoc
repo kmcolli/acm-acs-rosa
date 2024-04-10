@@ -181,7 +181,7 @@ image::images/acm-images/create_sub_app.png[]
 ** *Name*: `book-import`
 ** *Namespace*: `book-import`
 ** Under repository types, select the *GIT* repository
-** *URL:*  https://github.com/hichammourad/book-import.git[https://github.com/hichammourad/book-import.git]
+** *URL:*  https://github.com/rh-mobb/book-import.git[https://github.com/rh-mobb/book-import.git]
 ** *Branch*:  `master-no-pre-post`
 ** *Path:*  `book-import`
 
@@ -274,8 +274,11 @@ You need to create three different resources in order to implement the policy co
 This is a complex topic, and this course is only providing an overview. Please consult the https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html-single/governance/index#governance[GRC product documentation] for more details on any of these policy controllers.
 
 1. Navigate to the *Governance* screen and click *create policy.*
-2. Navigate to the https://github.com/stolostron/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/stolostron/policy-collection/blob/main/stable/SC-System-and-Communications-Protection/policy-etcdencryption.yaml[Etcd Encryption]
-3. On the *ETCD Encryption Policy* click the *RAW* button on the policy.
+
+image::images/acm-images/acm-governance-create-policy.png[]
+
+2. Navigate to the https://github.com/rh-mobb/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/stolostron/policy-collection/blob/main/stable/SC-System-and-Communications-Protection/policy-etcdencryption.yaml[Etcd Encryption]
+3. On the *policy-namespace.yaml* click the *RAW* button on the policy.
 4. Copy the raw YAML.
 5. Under the *Create Policy* screen, enable the *YAML*. Copy and Paste the *RAW YAML* from the GitHub Repo
 
@@ -285,11 +288,12 @@ It should look something like this:
 apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
-  name: policy-etcdencryption
+  name: policy-namespace
+  namespace: default
   annotations:
     policy.open-cluster-management.io/standards: NIST SP 800-53
-    policy.open-cluster-management.io/categories: SC System and Communications Protection
-    policy.open-cluster-management.io/controls: SC-28 Protection Of Information At Rest
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
 spec:
   remediationAction: inform
   disabled: false
@@ -298,81 +302,71 @@ spec:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
         metadata:
-          name: enable-etcd-encryption
+          name: policy-namespace-example
         spec:
           remediationAction: inform
           severity: low
           object-templates:
             - complianceType: musthave
               objectDefinition:
-                apiVersion: config.openshift.io/v1
-                kind: APIServer
+                kind: Namespace
+                apiVersion: v1
                 metadata:
-                  name: cluster
-                spec:
-                  encryption:
-                    type: aescbc
-    - objectDefinition:
-        apiVersion: policy.open-cluster-management.io/v1
-        kind: ConfigurationPolicy
-        metadata:
-          name: enable-etcd-encryption-status-kubeapi
-        spec:
-          remediationAction: inform
-          severity: low
-          object-templates:
-            - complianceType: musthave
-              objectDefinition:
-                apiVersion: operator.openshift.io/v1
-                kind: KubeAPIServer
-                metadata:
-                  name: cluster
-                status:
-                  conditions:
-                    - message: 'All resources encrypted: secrets, configmaps'
-                      reason: EncryptionCompleted
+                  name: prod
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: binding-policy-etcdencryption
+  name: policy-namespace-placement
+  namespace: default
 placementRef:
-  name: placement-policy-etcdencryption
+  name: policy-namespace-placement
   kind: PlacementRule
   apiGroup: apps.open-cluster-management.io
 subjects:
-- name: policy-etcdencryption
-  kind: Policy
-  apiGroup: policy.open-cluster-management.io
+  - name: policy-namespace
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: placement-policy-etcdencryption
+  name: policy-namespace-placement
+  namespace: default
 spec:
   clusterConditions:
-  - status: "True"
-    type: ManagedClusterConditionAvailable
+    - status: "True"
+      type: ManagedClusterConditionAvailable
   clusterSelector:
     matchExpressions:
-      - {key: environment, operator: In, values: ["dev"]}
+      - key: environment
+        operator: In
+        values:
+          - rosa
 ----
 
+image::images/acm-images/acm-create-ns-policy.png[]
+
+click Next
 
 [start=6]
-6. Continue filling out the infromation:
+6. Review the Policy Templates, Placement, and Policy Annotation sections, keeping the defaults and clicking Next.
+We have already defined these values in the YAML file.
 
-* *Namespace*: `default`
-* Click on Step 5 and verify that everything looks correct.
-* Click Submit.
+On the Review screen, click Submit
+
+image::images/acm-images/acm-create-ns-policy-review.png[]
 
 [start=7]
-7. Navigate to the Results screen, allow the scan to complete, it shouldn't take more than 3 minutes.
+7. The Results screen appears on the next screen.
 
 Once complete notice the violations you have, since we created this policy as a Inform only it will not fix any of the violations, lets go ahead and fix them
 
 [start=8]
 8. On the top of the policy click on the *Actions → Edit Policy*
+
+image::images/acm-images/acm-edit-policy.png[]
+
 9. Select *Step 2* and change the Remediation to *Enforce*
 10. Select *Step 5* review that is under Remediation is set to *Enforce*
 11. Click *Submit*
@@ -385,3 +379,19 @@ image::images/acm-images/policy7.png[]
 
 
 Now you have succesfully created a Policy to scan your clusters, if you would like to play with other policies please visit the https://github.com/stolostron/policy-collection[Policy Repo] for more Policies you can test out.
+
+[start=13]
+13. Navigate to your ROSA Environment
+
+Run the following command to make sure the prod namespace is present
+
+```bash
+oc get ns prod
+```
+
+*Output*
+
+```bash
+NAME   STATUS   AGE
+prod   Active   65s
+```
