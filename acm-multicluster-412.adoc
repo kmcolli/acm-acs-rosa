@@ -54,7 +54,7 @@ When you first went through the ROSA lab, you created a cluster-admin user and s
 
 Verify the admin password is set in your terminal.
 Run the following command and ensure that the applications are up and running
-|===
+
 
 ```bash
 echo $ADMIN_PASSWORD
@@ -64,7 +64,7 @@ echo $ADMIN_PASSWORD
 ```bash
 CIvGW-5waw3-taJLz-Lyhw6
 ```
-==== Echo admin password
+
 
 You wil have a different value, but it should have returned something.
 
@@ -95,7 +95,7 @@ You have access to 99 projects, the list has been suppressed. You can list all p
 Using project "default".
 Welcome! See 'oc help' to get started.
 ```
-==== oc login 
+
 
 [start=6]
 6. After being logged into your rosa cluster, you can now paste in the command you copied from ACM ( step 3)
