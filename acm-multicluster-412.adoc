@@ -60,15 +60,15 @@ Run the following command and ensure that the applications are up and running
 echo $ADMIN_PASSWORD
 ```
 
-*Output*
+*Example Output*
 ```bash
 CIvGW-5waw3-taJLz-Lyhw6
 ```
 
 
-You wil have a different value, but it should have returned something.
+You will have a different value, but it should have returned something.
 
-If you don't have this environment variable set, go back through the Create Admin User section of the ROSA demo.
+If you don't have this environment variable set, go back through the Create Admin User section of the ROSA lab.
 
 image::images/acm-images/acm-rosa-create-admin.png[]
 
@@ -126,132 +126,10 @@ image::images/acm-images/acm-show-rosa.png[]
 
 *Congratulations!* You have successfully imported a ROSA cluster into ACM.
 
-== Create a new OpenShift cluster in AWS
-
-
-1. From the menu select *Infrastructure → Clusters*
-2. Click *Create Cluster*
-
-image::images/acm-images/create_cluster.png[]
-
-
-[start=3]
-3. Select *Amazon Web services*
-
-image::images/acm-images/aws_cluster.png[]
-
-[start=4]
-4. Select *Standalone*
-
-image::images/acm-images/standalone.png[]
-
-[start=5]
-5. Select the *Infrastructure provider credential* we just created called *AWS*
-
-* Add the desired *cluster name*.
-* Leave the *Cluster set empty for now*
-* Select a *Release Image*, select the 4.12.26 version
-* Add an Additional labels of *environment=prod*
-* Click NEXT
-
-Change the region to *see table below*
-
-|===
-|Your Location | AWS Region to select
-|*NORTH AMERICA*|Select *us-west-1* or *us-west-2*
-
-|*EUROPE / EMEA*|Select *eu-west-2* or *eu-west-3*
-|*ASIA PACIFIC*|Select *ap-southeast-2* or *ap-northeast-2* or *ap-east-1*
-|===
-
-[start=6]
-6. Click NEXT on the other screens or select *7 - Review* on the menu and then click *CREATE*
-
-_This process takes about 30 to 40 minutes depending on AWS traffic at the time this course is taken. Make sure you monitor for any failures and address as needed_
-
-== Creating a Single Node Cluster (SNO) in AWS
-
-While we wait for the main cluster to provision, lets go ahead and provision a Single Node Cluster. In this exercise we will show you how to create a single node cluster (OCP 4.8 and Above required) in order to save some time and resources when building clusters for testing.
-
-*Please NOTE* that provisioning SNO clusters in public clouds is not currently supported, we only support SNO clusters as bare metal, we leverage the public cloud in the example below to showcase the functionality only.
-
-1. From the menu select *Infrastructure → Clusters*
-2. Click *Create Cluster*
-3. Select *Amazon Web services*
-4. Select *Standalone*
-
-[start=5]
-5. Please set it up as follows:
-* Select the *Infrastructure provider credential*  *AWS*
-* Click NEXT
-* Add the desired cluster name. Leave the Cluster set empty for now
-* Select a *Release Image*, select a *OCP 4.12.26 version*
-* Add an Additional label of *environment=qa*
-* Click NEXT
-* Change the region to *see table below*
-
-
-|===
-|Your Location | AWS Region to select
-|*NORTH AMERICA*|Select *us-west-1* or *us-west-2*
-
-|*EUROPE / EMEA*|Select *eu-west-2* or *eu-west-3*
-|*ASIA PACIFIC*|Select *ap-southeast-2* or *ap-northeast-2* or *ap-east-1*
-|===
-
-[start=6]
-6. Expand the *Worker Pools*, and change the worker node count to 0
-
-image::images/acm-images/node_0.png[]
-
-[start=7]
-7. Click on step 7 to Review *before* proceeding, turn *YAML: ON at the top of the screen.*
-
-[start=8]
-8. Click on the *install-config* tab in the YAML window pane and *change the master replica number to 1* (will likely be 3).  Double check that the worker replica is 0.
-
-image::images/acm-images/install-config.png[]
-
-[start=9]
-9. Click back on the *cluster* tab in the YAML window pane and locate the section that defines an object of type: *kind: MachinePool*. Add the following line at the end of the *MachinePool* section.
-----
-  skipMachinePools: true
-----
-
-It should look something like this:
-----
-apiVersion: hive.openshift.io/v1
-kind: MachinePool
-metadata:
-  name: cluster2-worker
-  namespace: 'cluster2'
-spec:
-  clusterDeploymentRef:
-    name: 'cluster2'
-  name: worker
-  platform:
-    aws:
-      rootVolume:
-        iops: 2000
-        size: 100
-        type: io1
-      type: m5.xlarge
-  replicas: 0
-  skipMachinePools: true
-----
-
-Be sure the new line is at the same indentation as the previous line.
-
-[start=10]
-10. Click on “*Create*” and the single node cluster creation will go through.
-
-_This process takes about 10 to 20 minutes depending on AWS traffic at the time this course is taken. Make sure you monitor for any failures and address as needed_
-
-
 == Creating and Managing Applications with Red Hat Advanced Cluster Management For Kubernetes
 
 
-In the previous lab, you explored the Cluster Lifecycle functionality in RHACM. This allowed you to create new OpenShift® clusters, which you can now use to deploy applications.
+In the previous lab, you imported a ROSA cluster into RHACM, which you can now use to deploy applications.
 
 Application Lifecycle functionality in RHACM provides the processes that are used to manage application resources on your managed clusters. This allows you to define a single or multi-cluster application using Kubernetes specifications, but with additional automation of the deployment and lifecycle management of resources to individual clusters. An application designed to run on a single cluster is straightforward and something you ought to be familiar with from working with OpenShift fundamentals. A multi-cluster application allows you to orchestrate the deployment of these same resources to multiple clusters, based on a set of rules you define for which clusters run the application components.
 
@@ -280,13 +158,16 @@ Prerequisites:
 
 * Navigate to *Infrastructure → Clusters*
 * Click on the *local-cluster*
-* Click the *edit* button under *Labels* and add a *label* : `environment=dev`
-* Verify the new clusters you build have the correct labels, it should be as follows:
-** *Local-Cluster* - `environment=dev`
-** *AWS 1st Cluster* - `environment=prod`
-** *AWS 2nd Cluster* - `environment=qa`
+* Click the *edit* button under *Labels* and add a *label* : `environment=acm`
 
-image::images/acm-images/env_labels.png[]
+image::images/acm-images/acm-edit-labels.png[]
+
+* Repeat the same steps from the rosa-cluser with a label : `environment=rosa`
+* Verify the new clusters you build have the correct labels, it should be as follows:
+** *Local-Cluster* - `environment=acm`
+** *ROSA Cluster* - `environment=rosa`
+
+image::images/acm-images/acm-verify-lables.png[]
 
 [start=1]
 1. Navigate to *Applications*
@@ -306,9 +187,10 @@ image::images/acm-images/create_sub_app.png[]
 
 [start=4]
 4. Verify that *Deploy application resources only on clusters matching specified labels* is selected and enter the following information
-** *environment*: `dev`
+** *Cluster Sets*: `default`
+** *environment*: `rosa`
 
-image::images/acm-images/label_sub.png[]
+image::images/acm-images/acm-create-application-sub.png[]
 
 
 You do not need the to include the colon (:)
@@ -322,10 +204,30 @@ image::images/acm-images/book_topology.png[]
 
 [start=6]
 6. Under the topology view, Select the *Route* and click on the *Launch Route* *URL*, this will take you to the Book Import application with several books available.
+*NOTE* some browsers will default to https and you will see a message that the application is not available.  If you see this change the url from https to http.
 
 image::images/acm-images/book_website.png[]
 
-Feel free to experiment with the application.  Edit it and change the label to `environment=prod`.  What happens to the application?
+[start=7]
+7. Verify the application has been deployed to the ROSA cluster. 
+
+From the ROSA lab environment run the following command:
+
+```bash
+oc get pods -n book-import
+```
+
+*Output*
+
+```bash
+NAME                          READY   STATUS    RESTARTS   AGE
+book-import-d44c446cf-wwj9q   1/1     Running   0          42s
+book-import-d44c446cf-xlg8n   1/1     Running   0          42s
+```
+
+image::images/acm-images/acm-rosa-list-pods.png[]
+
+Going back to the ACM console, feel free to experiment with the application.  Edit it and change the label to `environment=acm`.  What happens to the application?
 
 You have now completed the overview of the *Application Lifecycle functionality in RHACM.*
 
