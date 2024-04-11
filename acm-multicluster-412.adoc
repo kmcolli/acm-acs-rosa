@@ -167,7 +167,7 @@ image::images/acm-images/acm-edit-labels.png[]
 ** *Local-Cluster* - `environment=acm`
 ** *ROSA Cluster* - `environment=rosa`
 
-image::images/acm-images/acm-verify-lables.png[]
+image::images/acm-images/acm-verify-labels.png[]
 
 [start=1]
 1. Navigate to *Applications*
