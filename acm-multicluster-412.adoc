@@ -277,7 +277,7 @@ This is a complex topic, and this course is only providing an overview. Please c
 
 image::images/acm-images/acm-governance-create-policy.png[]
 
-2. Navigate to the https://github.com/rh-mobb/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/stolostron/policy-collection/blob/main/stable/SC-System-and-Communications-Protection/policy-etcdencryption.yaml[Etcd Encryption]
+2. Navigate to the https://github.com/rh-mobb/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/rh-mobb/policy-collection/blob/main/stable/SC-System-and-Communications-Protection/policy-etcdencryption.yaml[Etcd Encryption]
 3. On the *policy-namespace.yaml* click the *RAW* button on the policy.
 4. Copy the raw YAML.
 5. Under the *Create Policy* screen, enable the *YAML*. Copy and Paste the *RAW YAML* from the GitHub Repo
@@ -378,7 +378,7 @@ image::images/acm-images/policy7.png[]
 
 
 
-Now you have succesfully created a Policy to scan your clusters, if you would like to play with other policies please visit the https://github.com/stolostron/policy-collection[Policy Repo] for more Policies you can test out.
+Now you have succesfully created a Policy to scan your clusters, if you would like to play with other policies please visit the https://github.com/rh-mobb/policy-collection[Policy Repo] for more Policies you can test out.
 
 [start=13]
 13. Navigate to your ROSA Environment
