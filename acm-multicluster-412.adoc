@@ -1,19 +1,21 @@
 = Advanced Cluster Management for Kubernetes - RHACM
 
-== Working with ROSA clusters in ACM
+== Working with ROSA clusters in ACM (Cluster Lifecycle Management)
 
-Currently, you cannot create and manage the cluster lifecycle of ROSA clusters with ACM, however you can import ROSA clusters into ACM.  After a ROSA cluster is imported into ACM you can then use ACM to manage applications and policies for that ROSA cluster like you can for any other cluster.
+At a high level, cluster lifecycle management is about creating, upgrading, destroying, and importing clusters in a multi-cloud environment.
 
-Navigate to `Local-cluster` then you should see the new ACM console when you select `All Clusters`.
+Currently, you cannot create and manage the cluster lifecycle of ROSA clusters with ACM; however, you can import ROSA clusters into ACM. After a ROSA cluster is imported into ACM, you can use ACM to manage applications and policies for that ROSA cluster like you can for any other cluster.
 
-Once there you can proceed with the module.
+Navigate to `local-cluster`; you should see the new ACM console when you select `All Clusters`.
+
+Once there, you can proceed with the module.
 
 image::images/acm-images/RHACM_all_cluster.png[]
 
 == Importing a ROSA cluster into ACM
 
 [start=1]
-1. Once you have logged in to ACM, click on Import Cluster
+Once you have logged in to ACM, click on Import Cluster
 
 image::images/acm-images/acm-import-cluster.png[]
 
@@ -21,32 +23,42 @@ image::images/acm-images/acm-import-cluster.png[]
 
 * Name:  `rosa-cluster`
 * Cluster Set: `default`
+* Additional labels: Leave blank for now
+* Import mode: "Run import commands manually"
+
+Click Next
 
 image::images/acm-images/acm-import-rosa.png[]
 
 ##### Screen 2: Automation
 
 [start=2]
-2. Click NEXT
+Keep all the defaults.
 
-Keep all the defaults, we will manually import the cluster. Click Next.
+Click Next
 
 image::images/acm-images/acm-import-rosa-automation.png[]
 
 ##### Screen 3: Review
 
 [start=3]
-3. Click Generate Command - you can review the settings here.  This will generate a command that we will next run on our ROSA cluster.
+You can review the settings here and even toggle the YAML to copy out the CRD that will be created for you.
 
-* Click Generate Command
+Click *Generate Command*.  This will generate a command we will run next on our ROSA cluster.
 
-Click on Copy Command, that will copy a command to register your cluster with ACM to your clipboard.
+image::images/acm-images/acm-import-rosa-review-yaml.png[]
+
+##### Cluster Overview
+
+After clicking *Generate Command*, you will be brought to the Cluster Overview screen.
+
+Click on *Copy Command*. This will copy a command to register your cluster with ACM to your clipboard.
 
 image::images/acm-images/acm-import-rosa-copy-command.png[]
 
 
 [start=4]
-4. Next, log into your ROSA cluster.  Navigate to your ROSA Workshop environment and the beginning Environment Setup section, and ssh into the bastion.
+Next, log into your ROSA cluster.  Navigate to your ROSA Workshop environment and the beginning Environment Setup section, and ssh into the bastion.
 
 image::images/acm-images/acm-rosa-setup-environment.png[]
 
