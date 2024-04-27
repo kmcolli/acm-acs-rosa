@@ -147,10 +147,9 @@ image::images/acm-images/acm-show-rosa.png[padding=20]
 
 In the previous lab, you imported a ROSA cluster into RHACM, which you can now use to deploy applications.
 
-Application Lifecycle functionality in RHACM provides the processes that are used to manage application resources on your managed clusters. This allows you to define a single or multi-cluster application using Kubernetes specifications, but with additional automation of the deployment and lifecycle management of resources to individual clusters. An application designed to run on a single cluster is straightforward and something you ought to be familiar with from working with OpenShift fundamentals. A multi-cluster application allows you to orchestrate the deployment of these same resources to multiple clusters, based on a set of rules you define for which clusters run the application components.
+Application Lifecycle functionality in RHACM provides the processes that are used to manage application resources on your managed clusters. This allows you to define a single or multi-cluster application using Kubernetes specifications but with additional automation of the deployment and lifecycle management of resources to individual clusters. An application designed to run on a single cluster is straightforward and something you ought to be familiar with from working with OpenShift fundamentals. A multi-cluster application allows you to orchestrate the deployment of these same resources to multiple clusters based on a set of rules you define for which clusters run the application components.
 
 This table describes the different components that the Application Lifecycle model in RHACM is composed of:
-
 
 
 |===
@@ -165,7 +164,7 @@ This table describes the different components that the Application Lifecycle mod
 
 These are all Kubernetes custom resources, defined by a Custom Resource Definition (CRD), that are created for you when RHACM is installed. By creating these as Kubernetes native objects, you can interact with them the same way you would with a Pod. For instance, running +oc get application+ retrieves a list of deployed RHACM applications just as +oc get pods+ retrieves a list of deployed Pods.
 
-This may seem like a lot of extra resources to manage in addition to the deployables that actually make up your application. However, they make it possible to automate the composition, placement, and overall control of your applications when you are deploying to many clusters. With a single cluster, it is easy to log in and run +oc create -f…​.+ If you need to do that on a dozen clusters, you want to make sure you do not make a mistake or miss a cluster, and you need a way to schedule and orchestrate updates to your applications. Leveraging the Application Lifecycle Builder in RHACM allows you to easily manage multi-cluster applications.
+This may seem like a lot of extra resources to manage besides the deployables that make up your application. However, they make it possible to automate the composition, placement, and overall control of your applications when you are deploying to many clusters. With a single cluster, it is easy to log in and run +oc create -f…​.+ If you need to do that on a dozen clusters, you want to make sure you do not make a mistake or miss a cluster, and you need a way to schedule and orchestrate updates to your applications. Leveraging the Application Lifecycle Builder in RHACM allows you to manage multi-cluster applications easily.
 
 == Creating an Application
 
@@ -178,16 +177,16 @@ Prerequisites:
 
 image::images/acm-images/acm-edit-labels.png[]
 
-* Repeat the same steps from the rosa-cluser with a label : `environment=rosa`
-* Verify the new clusters you build have the correct labels, it should be as follows:
-** *Local-Cluster* - `environment=acm`
-** *ROSA Cluster* - `environment=rosa`
+* Repeat the same steps for the rosa-cluster with a *label*: `environment=rosa`
+* Verify that the new clusters you built have the correct labels. It should be as follows:
+** *local-cluster* - `environment=acm`
+** *rosa-cluster* - `environment=rosa`
 
 image::images/acm-images/acm-verify-labels.png[]
 
 [start=1]
 1. Navigate to *Applications*
-2. Click *Create application, select Subscription*. 
+2. Click *Create application*, select *Subscription*. 
 
 image::images/acm-images/create_sub_app.png[]
 
@@ -202,14 +201,15 @@ image::images/acm-images/create_sub_app.png[]
 ** *Path:*  `book-import`
 
 [start=4]
-4. Verify that *Deploy application resources only on clusters matching specified labels* is selected and enter the following information
+4. Verify that *Deploy application resources only on clusters matching specified labels* is selected and enter the following information. (
+You do not need to include the colon (:) on the label):
 ** *Cluster Sets*: `default`
 ** *environment*: `rosa`
 
+> *Cluster Sets*: `default` is the default cluster set that comes with ACM, while `global` always targets all clusters. You can also create your own Cluster Sets to target specific clusters.
+
 image::images/acm-images/acm-create-application-sub.png[]
 
-
-You do not need the to include the colon (:)
 
 [start=5]
 5. Verify all the information is correct. Click *Create*
@@ -225,9 +225,9 @@ image::images/acm-images/book_topology.png[]
 image::images/acm-images/book_website.png[]
 
 [start=7]
-7. Verify the application has been deployed to the ROSA cluster. 
+=== Verify the application has been deployed to the ROSA cluster. 
 
-From the ROSA lab environment run the following command:
+From the ROSA lab environment, ensure that you are still logged into your bastion host and then run the following command:
 
 ```bash
 oc get pods -n book-import
@@ -247,9 +247,13 @@ Going back to the ACM console, feel free to experiment with the application.  Ed
 
 You have now completed the overview of the *Application Lifecycle functionality in RHACM.*
 
-You successfully deployed an application to a target cluster using RHACM. This approach leveraged a Git repository which housed all of the manifests that defined your application. RHACM was able to take those manifests and use them as deployables, which were then deployed to the target cluster.
+You successfully deployed an application to a target cluster using RHACM. This approach leveraged a Git repository, which housed all of the manifests that defined your application. RHACM was able to take those manifests and use them as deployables, which were then deployed to the target cluster.
 
 You also leverage the power of labels and deploy the application to your imported cluster. I highly encourage you to play around with the labels and deploy this application to your local cluster. You can also create other clusters and or applications if you so desire.
+
+=== Extra Credit
+
+Try to deploy an Application on ACM using the ApplicationSet method. (Hint: This will require the OpenShift GitOps (ArgoCD) operator to be installed on the local cluster.) What do you see in the ArgoCD console after you do this?
 
 == Governance, Risk, and Compliance (Security and compliance use case)
 
