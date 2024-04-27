@@ -1,5 +1,7 @@
 = Advanced Cluster Management for Kubernetes - RHACM
 
+> Please note that you will need your running ROSA cluster from Day 1 in order to continue. If you missed Day 1 or have not set this up yet, please go ahead and create your ROSA cluster now. Creation time will take roughly 40 minutes.
+
 == Working with ROSA clusters in ACM (Cluster Lifecycle Management)
 
 At a high level, cluster lifecycle management is about creating, upgrading, destroying, and importing clusters in a multi-cloud environment.
@@ -52,17 +54,21 @@ image::images/acm-images/acm-import-rosa-review-yaml.png[]
 
 After clicking *Generate Command*, you will be brought to the Cluster Overview screen.
 
-Click on *Copy Command*. This will copy a command to register your cluster with ACM to your clipboard.
+Click on *Copy Command*. This will copy a Base64 encoded command to register your cluster with ACM to your clipboard. _Tip: Paste this command into a text editor to save it for later._
 
 image::images/acm-images/acm-import-rosa-copy-command.png[]
 
 
 [start=4]
-Next, log into your ROSA cluster.  Navigate to your ROSA Workshop environment and the beginning Environment Setup section, and ssh into the bastion.
+=== Logging into your ROSA cluster
+
+> You will need a running ROSA cluster in order to continue
+
+Navigate to your ROSA Workshop environment from Day 1 and the beginning *Environment Setup* section, and ssh into the bastion.
 
 image::images/acm-images/acm-rosa-setup-environment.png[]
 
-When you first went through the ROSA lab, you created a cluster-admin user and saved the password to an environment variable named ADMIN_PASSWORD.
+When you first went through the ROSA lab, you created a `cluster-admin` user and saved the password to an environment variable named `ADMIN_PASSWORD`.
 
 Verify the admin password is set in your terminal.
 Run the following command and ensure that the applications are up and running
@@ -80,7 +86,7 @@ CIvGW-5waw3-taJLz-Lyhw6
 
 You will have a different value, but it should have returned something.
 
-If you don't have this environment variable set, go back through the Create Admin User section of the ROSA lab.
+If you don't have this environment variable set, go back through the *Create Admin User* section of the ROSA lab.
 
 image::images/acm-images/acm-rosa-create-admin.png[]
 
@@ -110,7 +116,7 @@ Welcome! See 'oc help' to get started.
 
 
 [start=6]
-6. After being logged into your rosa cluster, you can now paste in the command you copied from ACM ( step 3)
+After logging into your ROSA cluster, run the ACM command you saved to your text editor from *Screen 3: Review*.
 
 
 *Output*
@@ -129,17 +135,15 @@ klusterlet.operator.open-cluster-management.io/klusterlet created
 ```
 
 image::images/acm-images/acm-import-cluster-command.png[]
-
-
+  
 [start=7]
-7. Navigate back to your ACM console and ensure the ROSA cluster has been successfully imported.
+==== Navigate back to your ACM console and ensure the ROSA cluster has been successfully imported.
 
-image::images/acm-images/acm-show-rosa.png[]
+image::images/acm-images/acm-show-rosa.png[padding=20]
 
-*Congratulations!* You have successfully imported a ROSA cluster into ACM.
+==== *Congratulations!* You have successfully imported a ROSA cluster into ACM.
 
 == Creating and Managing Applications with Red Hat Advanced Cluster Management For Kubernetes
-
 
 In the previous lab, you imported a ROSA cluster into RHACM, which you can now use to deploy applications.
 
