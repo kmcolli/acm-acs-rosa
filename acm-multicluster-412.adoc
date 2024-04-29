@@ -162,7 +162,7 @@ This table describes the different components that the Application Lifecycle mod
 |===
 
 
-These are all Kubernetes custom resources, defined by a Custom Resource Definition (CRD), that are created for you when RHACM is installed. By creating these as Kubernetes native objects, you can interact with them the same way you would with a Pod. For instance, running +oc get application+ retrieves a list of deployed RHACM applications just as +oc get pods+ retrieves a list of deployed Pods.
+These are all Kubernetes custom resources, defined by a Custom Resource Definition (CRD), created for you when RHACM is installed. By creating these as Kubernetes native objects, you can interact with them the same way you would with a Pod. For instance, running +oc get application+ retrieves a list of deployed RHACM applications just as +oc get pods+ retrieves a list of deployed Pods.
 
 This may seem like a lot of extra resources to manage besides the deployables that make up your application. However, they make it possible to automate the composition, placement, and overall control of your applications when you are deploying to many clusters. With a single cluster, it is easy to log in and run +oc create -f…​.+ If you need to do that on a dozen clusters, you want to make sure you do not make a mistake or miss a cluster, and you need a way to schedule and orchestrate updates to your applications. Leveraging the Application Lifecycle Builder in RHACM allows you to manage multi-cluster applications easily.
 
@@ -219,15 +219,15 @@ It will take a few minutes to deploy the application, *Click* on the *Topology* 
 image::images/acm-images/book_topology.png[]
 
 [start=6]
-6. Under the topology view, Select the *Route* and click on the *Launch Route* *URL*, this will take you to the Book Import application with several books available.
-*NOTE* some browsers will default to https and you will see a message that the application is not available.  If you see this change the url from https to http.
+6. Under the topology view, Select the *Route* and click on the *Launch Route* *URL*. This will take you to the Book Import application, which has several books available.
+*NOTE* some browsers will default to https, and you will see a message that the application is unavailable. If you see this, change the url from https to http.
 
 image::images/acm-images/book_website.png[]
 
 [start=7]
 === Verify the application has been deployed to the ROSA cluster. 
 
-From the ROSA lab environment, ensure that you are still logged into your bastion host and then run the following command:
+From the ROSA lab environment, ensure that you are still logged into your bastion host, and then run the following command:
 
 ```bash
 oc get pods -n book-import
@@ -243,34 +243,34 @@ book-import-d44c446cf-xlg8n   1/1     Running   0          42s
 
 image::images/acm-images/acm-rosa-list-pods.png[]
 
-Going back to the ACM console, feel free to experiment with the application.  Edit it and change the label to `environment=acm`.  What happens to the application?
+Returning to the ACM console, feel free to experiment with the application.  Edit it and change the label to `environment=acm`.  What happens to the application?
 
 You have now completed the overview of the *Application Lifecycle functionality in RHACM.*
 
-You successfully deployed an application to a target cluster using RHACM. This approach leveraged a Git repository, which housed all of the manifests that defined your application. RHACM was able to take those manifests and use them as deployables, which were then deployed to the target cluster.
+You successfully deployed an application to a target cluster using RHACM. This approach leveraged a Git repository, which housed all the manifests that defined your application. RHACM then took these manifests and deployed them to the target cluster.
 
-You also leverage the power of labels and deploy the application to your imported cluster. I highly encourage you to play around with the labels and deploy this application to your local cluster. You can also create other clusters and or applications if you so desire.
+You also leveraged the power of labels and deployed the application to your imported cluster. Try playing with the labels and deploying this application to your local cluster. You can also create other clusters and or applications if you so desire.
 
 === Extra Credit
 
-Try to deploy an Application on ACM using the ApplicationSet method. (Hint: This will require the OpenShift GitOps (ArgoCD) operator to be installed on the local cluster.) What do you see in the ArgoCD console after you do this?
+Try to deploy an Application on ACM using the ApplicationSet method. (Hint: This will require installing the OpenShift GitOps (ArgoCD) operator on the local cluster.) What do you see in the ArgoCD console after you do this?
 
 == Governance, Risk, and Compliance (Security and compliance use case)
 
 === Creating Policies in ACM
 
 
-At this point, you have completed the overview labs for Cluster Lifecycle and Application Lifecycle capabilities in RHACM. In the Cluster Lifecycle Lab, you learned how RHACM can help manage the lifecycles of your Kubernetes clusters, including both deploying new clusters and importing existing clusters. In that lab, you created new clsters and used your RHACM instance to manage them.
+At this point, you have completed the overview labs for Cluster Lifecycle and Application Lifecycle capabilities in RHACM. In the Cluster Lifecycle Lab, you learned how RHACM can help manage your Kubernetes clusters' lifecycles, including deploying new clusters and importing existing ones. You created new clusters in that lab and used your RHACM instance to manage them.
 
 In the Application Lifecycle Lab, you continued exploring RHACM functionality and learned how to deploy and configure an application. You used the cluster that you added in the first module as the target for deploying an application.
 
-Now that you have a cluster and a deployed application, you need to make sure that they do not drift from their original configurations. This kind of drift is a serious problem, because it can happen from benign and benevolent fixes and changes, as well as malicious activities that you might not notice but can cause significant problems. The solution that RHACM provides for this is the Governance, Risk, and Compliance, or GRC, functionality.
+Now that you have a cluster and a deployed application, you must ensure they do not drift from their original configurations. This kind of drift is a serious problem because it can happen from benign and benevolent fixes and changes or malicious activities that you might not notice but can cause significant problems. RHACM's solution to this problemis the Governance, Risk, and Compliance, or GRC, functionality.
 
 ==== Review GRC Functionality
 
-To begin, it is important to define exactly what GRC is. In RHACM, you build policies that are applied to managed clusters. These policies can do different things, which are described below, but they ultimately serve to govern the configurations of your clusters. This governance over your cluster configurations reduces risk and ensures compliance with standards defined by stakeholders, which can include security teams and operations teams
+It is important to define exactly what GRC is. In RHACM, you build and apply policies to managed clusters. These policies can do different things, which are described below, but they ultimately serve to govern the configurations of your clusters. This governance over your cluster configurations reduces risk and ensures compliance with standards defined by stakeholders, which can include security teams and operations teams
 
-This table describes the three types of policy controllers available in RHACM along with the remediation mode they support:
+This table describes the three types of policy controllers available in RHACM, along with the remediation mode they support:
 
 |===
 |*Policy Controller*|*Purpose*|*Enforce or Inform*
@@ -280,22 +280,72 @@ This table describes the three types of policy controllers available in RHACM al
 |Identity and Access Management (IAM)|Used to receive notifications about IAM policies that are noncompliant. In the 1.0 version of RHACM, this checks for compliance with the number of cluster administrators you allow in your cluster.    |inform
 |===
 
-You need to create three different resources in order to implement the policy controllers:
+You need to create three different resources to implement the policy controllers:
 
 |===
 |*Resource*|*Function*
 
-|Policy|The Policy defines what you actually want to check and possibly configure (with enforce). Policies include a policy-template which defines a list of objectDefinitions. The policy also determines the namespaces it is applied to, as well as the remediation actions it takes.
-|Placement Rule|Identifies a list of managed clusters that are targeted when using this PlacementRule.
+|Policy|The Policy defines what you want to check and possibly configure (with enforcement). Policies include a policy template which defines a list of objectDefinitions. The policy also determines the namespaces to which it is applied and the remediation actions it takes.
+|Placement|Identifies a list of targeted managed clusters when using this Placement.
 |PlacementBinding|Connect the policy to the PlacementRule.
 |===
 
 
-This is a complex topic, and this course is only providing an overview. Please consult the https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html-single/governance/index#governance[GRC product documentation] for more details on any of these policy controllers.
+This is a complex topic, and this course only provides an overview. Please consult the https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html-single/governance/index#governance[GRC product documentation] for more details on any of these policy controllers.
 
-1. Navigate to the *Governance* screen and click *create policy.*
+We'll work through a simple example and create a policy in the default namespace. For this, we'll need a little setup:
+
+Navigate to *Clusters* and access the *ClusterSets* tab.
+
+image::images/acm-images/acm-clustersets.png[]
+
+Click on the 3-dots button to the right of *global*, and then on *Edit namespace bindings* and add the *default* namespace
+
+image::images/acm-images/acm-clustersets-namespace-bindings.png[]
+
+Next, navigate to the *Governance* screen and click *Create policy*.
 
 image::images/acm-images/acm-governance-create-policy.png[]
+
+Build a policy with the following information:
+
+##### Screen 1: Details
+
+* *Name*: policy-grc-cert
+* *Namespace*: default (needs to match the namespace you enabled on the namespace binding)
+
+
+Click *Next*.
+
+##### Screen 2: Policy Templates
+
+* Click on *Add policy template* and select *Certificate management expiration*
+* Leave the defaults
+
+Click *Next*.
+
+##### Screen 3: Placement
+
+Select *New placement* and choose *global* under *Cluster sets* (this option was enabled by editing the namespace bindings earlier.)
+
+Alternatively, you can attempt to match clusters based on a label by clicking *Add label expression* and creating a label-matching expression.
+
+When you are finished, click *Next*.
+
+##### Screen 4: Policy Annotations
+
+* Take the defaults on this screen.
+
+Click *Next*.
+
+##### Screen 5: Review
+
+As you can see on the *Review* screen, this policy applies to every cluster in the *global* *ClusterSet*, and it will look for expired certificates in them. If a certificate is set to expire in less time than the *minimumDuration* specification, the policy will *inform* a non-compliant status.
+
+* Review your changes and then click *Submit*.
+
+image::images/acm-images/acm-policy-review-cert.png[]
+
 
 2. Navigate to the https://github.com/rh-mobb/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/rh-mobb/policy-collection/blob/main/stable/SC-System-and-Communications-Protection/policy-etcdencryption.yaml[Etcd Encryption]
 3. On the *policy-namespace.yaml* click the *RAW* button on the policy.
