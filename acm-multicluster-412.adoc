@@ -340,115 +340,38 @@ Click *Next*.
 
 ##### Screen 5: Review
 
-As you can see on the *Review* screen, this policy applies to every cluster in the *global* *ClusterSet*, and it will look for expired certificates in them. If a certificate is set to expire in less time than the *minimumDuration* specification, the policy will *inform* a non-compliant status.
+As you can see on the *Review* screen, this policy applies to every cluster in the *global* *ClusterSet* (assuming you did not create a label-matching expression instead), and it will look for expired certificates in those clusters. If a certificate is set to expire in less time than the *minimumDuration* specification, the policy will *inform* a non-compliant status.
 
 * Review your changes and then click *Submit*.
 
 image::images/acm-images/acm-policy-review-cert.png[]
 
+The Results screen appears on the next screen.
 
-2. Navigate to the https://github.com/rh-mobb/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/rh-mobb/policy-collection/blob/main/stable/SC-System-and-Communications-Protection/policy-etcdencryption.yaml[Etcd Encryption]
-3. On the *policy-namespace.yaml* click the *RAW* button on the policy.
-4. Copy the raw YAML.
-5. Under the *Create Policy* screen, enable the *YAML*. Copy and Paste the *RAW YAML* from the GitHub Repo
+Once complete, you may notice cluster violations, but these will soon go away.
 
-It should look something like this:
+### Extra Credit
+If you would like to experiment with violations,
 
-----
-apiVersion: policy.open-cluster-management.io/v1
-kind: Policy
-metadata:
-  name: policy-namespace
-  namespace: default
-  annotations:
-    policy.open-cluster-management.io/standards: NIST SP 800-53
-    policy.open-cluster-management.io/categories: CM Configuration Management
-    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
-spec:
-  remediationAction: inform
-  disabled: false
-  policy-templates:
-    - objectDefinition:
-        apiVersion: policy.open-cluster-management.io/v1
-        kind: ConfigurationPolicy
-        metadata:
-          name: policy-namespace-example
-        spec:
-          remediationAction: inform
-          severity: low
-          object-templates:
-            - complianceType: musthave
-              objectDefinition:
-                kind: Namespace
-                apiVersion: v1
-                metadata:
-                  name: prod
----
-apiVersion: policy.open-cluster-management.io/v1
-kind: PlacementBinding
-metadata:
-  name: policy-namespace-placement
-  namespace: default
-placementRef:
-  name: policy-namespace-placement
-  kind: PlacementRule
-  apiGroup: apps.open-cluster-management.io
-subjects:
-  - name: policy-namespace
-    kind: Policy
-    apiGroup: policy.open-cluster-management.io
----
-apiVersion: apps.open-cluster-management.io/v1
-kind: PlacementRule
-metadata:
-  name: policy-namespace-placement
-  namespace: default
-spec:
-  clusterConditions:
-    - status: "True"
-      type: ManagedClusterConditionAvailable
-  clusterSelector:
-    matchExpressions:
-      - key: environment
-        operator: In
-        values:
-          - rosa
-----
+1. Navigate to the https://github.com/rh-mobb/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/rh-mobb/policy-collection/blob/main/stable/SC-System-and-Communications-Protection/policy-etcdencryption.yaml[Etcd Encryption]
+2. On the *policy-namespace.yaml* click the *RAW* button on the policy.
+3. Copy the raw YAML.
+4. Create a new policy and enable the *YAML* toggle. Copy and Paste the *RAW YAML* from the GitHub Repo.
+5. Follow the procedure above, but notice that this time, the policy violation doesn't go away.
 
-image::images/acm-images/acm-create-ns-policy.png[]
+How can you fix the policy so that your clusters are automatically in compliance?
 
-click Next
-
-[start=6]
-6. Review the Policy Templates, Placement, and Policy Annotation sections, keeping the defaults and clicking Next.
-We have already defined these values in the YAML file.
-
-On the Review screen, click Submit
-
-image::images/acm-images/acm-create-ns-policy-review.png[]
-
-[start=7]
-7. The Results screen appears on the next screen.
-
-Once complete notice the violations you have, since we created this policy as a Inform only it will not fix any of the violations, lets go ahead and fix them
-
-[start=8]
-8. On the top of the policy click on the *Actions → Edit Policy*
+*Hint*
 
 image::images/acm-images/acm-edit-policy.png[]
 
-9. Select *Step 2* and change the Remediation to *Enforce*
-10. Select *Step 5* review that is under Remediation is set to *Enforce*
-11. Click *Submit*
+---
 
-[start=12]
-12. Navigate to the Results screen, allow the remediation to complete, _it may take longer to enforce the policy._
+Now you have successfully created a Policy to scan your clusters. If you would like to play with other policies please visit the https://github.com/rh-mobb/policy-collection[Policy Repo] for more policies you can test out.
 
-image::images/acm-images/policy7.png[]
+== End to End Visibility (Observability)
 
 
-
-Now you have succesfully created a Policy to scan your clusters, if you would like to play with other policies please visit the https://github.com/rh-mobb/policy-collection[Policy Repo] for more Policies you can test out.
 
 [start=13]
 13. Navigate to your ROSA Environment
