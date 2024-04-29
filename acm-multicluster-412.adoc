@@ -373,13 +373,13 @@ In this section, we will put on our Site Reliability Engineer (SRE) hats and set
 
 You will need:
 
-* Your AWS Keys (from your workshop environment homepage)
+* Your AWS Keys (from your MAD Ops workshop environment homepage)
 * An AWS S3 bucket
-* Your ROSA workshop bastion host
+* Your workshop bastion host
 
 === Create the S3 Bucket
 
-* Start by logging into your Modern App Dev Roadshow - Ops Track bastion host. See your workshop home page for instructions and your password.
+* Log into your bastion host. See your workshop home page for instructions and your password.
 * Run the following command to log in to AWS:  `aws configure`  and enter your AWS keys when prompted.  Default region: *us-east-2*
 * Then, run the following command to create the S3 bucket. (_**Please take note of the bucket name!**_)
 
