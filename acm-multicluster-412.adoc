@@ -415,3 +415,6 @@ oc get ns prod
 NAME   STATUS   AGE
 prod   Active   65s
 ```
+
+This concludes the Red Hat Advanced Cluster Management lab, thank you for your time.
+Find out more about https://www.redhat.com/en/technologies/management/advanced-cluster-management[Red Hat Advanced Cluster Manager]
