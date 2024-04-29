@@ -353,7 +353,7 @@ Once complete, you may notice cluster violations, but these will soon go away.
 ### Extra Credit
 If you would like to experiment with violations,
 
-1. Navigate to the https://github.com/rh-mobb/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/rh-mobb/policy-collection/blob/main/stable/SC-System-and-Communications-Protection/policy-etcdencryption.yaml[Etcd Encryption]
+1. Navigate to the https://github.com/rh-mobb/policy-collection/tree/main/stable/CM-Configuration-Management[GitHub Repo] with all the policies and select the https://github.com/rh-mobb/policy-collection/blob/main/stable/CM-Configuration-Management/policy-namespace.yaml[Namespace Policy]
 2. On the *policy-namespace.yaml* click the *RAW* button on the policy.
 3. Copy the raw YAML.
 4. Create a new policy and enable the *YAML* toggle. Copy and Paste the *RAW YAML* from the GitHub Repo.
